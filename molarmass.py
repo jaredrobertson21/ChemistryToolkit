@@ -14,6 +14,28 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('compound', help='A valid chemical compound')
 
+def parseCompound(compound):
+
+    element_stoich = []
+    elements = []
+
+    for char in compound:
+        if char.isupper():
+            print("Upper: " + char)
+            elements.append(char)
+        elif char.isnumeric():
+            print("Number: " + char)
+            element_stoich.append(char)
+        elif char == "(":
+            print("Bracket")
+        else:
+            print("Lowercase: " + char)
+
+    print(elements, element_stoich)
+
 args = parser.parse_args()
 compound = args.compound
-print(periodic_table[compound]['atomic_mass'])
+# print(periodic_table[compound]['atomic_mass'])
+
+parseCompound(compound)
+        
