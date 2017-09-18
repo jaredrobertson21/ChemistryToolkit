@@ -19,13 +19,28 @@ def parseCompound(compound):
     element_stoich = []
     elements = []
 
-    for char in compound:
+    for index, char in enumerate(compound):
+
         if char.isupper():
-            print("Upper: " + char)
-            elements.append(char)
+            # A new element is found
+            if index > 0:
+                # Check if there was no digit after the previous elements
+                # Add a stoichiometric coefficient of 1 to the list
+                if compound[index - 1].isalpha():
+                    element_stoich.append(1)
+            if index < (len(compound) - 1):
+                if compound[index + 1].islower():
+                    # The element is a two-letter element
+                    elements.append(char + compound[index + 1])
+                    print(elements)
+            else:
+                # The element is a one-letter element
+                elements.append(char)
+
         elif char.isnumeric():
+            # An explicit coefficient is given
             print("Number: " + char)
-            element_stoich.append(char)
+            element_stoich.append(int(char))
         elif char == "(":
             print("Bracket")
         else:
@@ -37,5 +52,4 @@ args = parser.parse_args()
 compound = args.compound
 # print(periodic_table[compound]['atomic_mass'])
 
-parseCompound(compound)
-        
+parseCompound('NaMoO4H2O')
