@@ -14,7 +14,8 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('compound', help='A valid chemical compound')
 
-def parseCompound(compound):
+
+def parse_compound(compound):
 
     element_stoich = []
     elements = []
@@ -24,32 +25,51 @@ def parseCompound(compound):
         if char.isupper():
             # A new element is found
             if index > 0:
-                # Check if there was no digit after the previous elements
-                # Add a stoichiometric coefficient of 1 to the list
+                # Not the first element in the string
                 if compound[index - 1].isalpha():
+                    # If there was no digit after the previous element,
+                    # add a stoichiometric coefficient of 1 to the list
                     element_stoich.append(1)
             if index < (len(compound) - 1):
+                # Not the last character in the string
                 if compound[index + 1].islower():
                     # The element is a two-letter element
                     elements.append(char + compound[index + 1])
-                    print(elements)
+                else:
+                    # The element is a single-letter element
+                    elements.append(char)
             else:
-                # The element is a one-letter element
+                # The element is a single-letter, mono-atomic element at the end of the compound string
                 elements.append(char)
+                element_stoich.append(1)
 
         elif char.isnumeric():
             # An explicit coefficient is given
-            print("Number: " + char)
             element_stoich.append(int(char))
+            # TODO: Use recursion to expand beyond single digit coefficients
+
         elif char == "(":
             print("Bracket")
         else:
-            print("Lowercase: " + char)
+            if index == (len(compound) - 1):
+                # The element is a two-letter, mono-atomic element at the end of the compound string
+                element_stoich.append(1)
 
-    print(elements, element_stoich)
+    return elements, element_stoich
+
+
+def molar_mass(compound):
+    parsed_compound = parse_compound(compound)
+    elements = parsed_compound[0]
+    coefficients = parsed_compound[1]
+    molar_mass_sum = 0
+    for element, coefficient in zip(elements, coefficients):
+        molar_mass_sum += periodic_table[element]['atomic_mass'] * coefficient
+
+    return molar_mass_sum
+
 
 args = parser.parse_args()
 compound = args.compound
-# print(periodic_table[compound]['atomic_mass'])
 
-parseCompound('NaMoO4H2O')
+print("Molar mass of {}: {} g/mol".format(compound, molar_mass(compound)))
