@@ -68,8 +68,9 @@ def molar_mass(compound):
 
     return molar_mass_sum
 
+if __name__ == '__main__':
 
-args = parser.parse_args()
-compound = args.compound
+    args = parser.parse_args()
+    compound = args.compound
 
-print("Molar mass of {}: {} g/mol".format(compound, molar_mass(compound)))
+    print("Molar mass of {}: {} g/mol".format(compound, molar_mass(compound)))
